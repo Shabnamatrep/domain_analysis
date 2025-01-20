@@ -1,0 +1,24 @@
+ipykernel
+prompt_toolkit
+pandas
+numpy
+matplotlib
+seaborn
+openpyxl
+scikit-learn
+joblib
+openai==0.28.0
+python-dotenv
+# langchain
+# langchain-community
+# Ollama
+transformers
+torch
+torchvision
+torchaudio
+tqdm
+shiny
+XlsxWriter
+PyPDF2
+nltk
+pdfplumber

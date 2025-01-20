@@ -1,0 +1,15 @@
+venv/
+.env
+persistent_files/
+domain_positive_negative_models/
+multilabel_domain_model/
+tokenizer_rv/
+distilbert_seq_classifier_rv.pth
+app2.py
+risk_keywords.txt
+down_rain_outputs/
+domain_cross.py
+pn.py
+# Other files to ignore
+
+__pycache__/
