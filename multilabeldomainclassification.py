@@ -21,10 +21,10 @@ from torch.nn.functional import softmax
 
 
 # Load environment variables from .env file
-# load_dotenv()
-# # Set the Hugging Face token. 
-# hugging_face_token = os.getenv('HUGGING_FACE_TOKEN')
-hugging_face_token = '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'
+load_dotenv()
+# Set the Hugging Face token. 
+hugging_face_token = os.getenv('HUGGING_FACE_TOKEN')
+
 #print(hugging_face_token)
 
 
