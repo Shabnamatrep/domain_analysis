@@ -169,9 +169,6 @@ def server(input: Inputs, output: Outputs, session: Session):
             if data is not None:
                 domain_scores_df = data["domain_scores_df"]
                 # Perform cross-validation with the uploaded assessment results
-                # cross_validation_results = perform_cross_validation(excel_file_path, domain_scores_df)
-                # cross_validation_results_df, summary_df = perform_cross_validation(excel_file_path, domain_scores_df)
-
                 cross_validation_results = perform_cross_validation(excel_file_path, domain_scores_df)
                 cross_validation_results_df = cross_validation_results["results_df"]
                 summary_df = cross_validation_results["summary_df"]
@@ -185,14 +182,6 @@ def server(input: Inputs, output: Outputs, session: Session):
 
                 return cross_validation_df_path, cross_validation_results_df, summary_df
         return None
-
-    # @output
-    # @render.data_frame
-    # def cross_validation_table():
-    #     data = cross_validation()
-    #     if data is not None:
-    #         print("Cross Validation Results:\n", data[1])  # Debugging line
-    #         return data[1]
         
     @output
     @render.data_frame

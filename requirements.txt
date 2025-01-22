@@ -1,21 +1,3 @@
-prompt_toolkit==3.0.50
-pandas==2.2.3
-numpy==2.2.2
-matplotlib==3.10.0
-seaborn==0.13.2
-shiny==1.2.1
-openpyxl==3.1.5
-scikit-learn==1.6.1
-joblib==1.4.2
-openai==0.28.0
-python-dotenv==1.0.1
-transformers==4.48.1
-torch==2.5.1
-torchaudio==2.5.1
-torchvision==0.20.1
-tqdm==4.67.1
-XlsxWriter==3.2.0
-PyPDF2==3.0.1
-nltk==3.9.1
-pdfplumber==0.11.5
-pydantic==2.10.5
+version https://git-lfs.github.com/spec/v1
+oid sha256:e70ed0c1ba6340d373df30d275cd181d720b9196837c24153c20c5876baf7a2d
+size 349
