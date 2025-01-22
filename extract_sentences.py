@@ -13,7 +13,9 @@ from nltk.tokenize import sent_tokenize
 # # Set NLTK data path explicitly for deployment
 os.environ["NLTK_DATA"] = "nltk_data"
 # Ensure you have the punkt tokenizer downloaded
-nltk.download('punkt')
+download_dir = os.path.abspath('nltk_data')
+# nltk.download('punkt')
+nltk.download('punkt', download_dir=download_dir)
 
 
 # import ntlk.data
