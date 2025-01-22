@@ -5,13 +5,23 @@ from pathlib import Path
 from typing import List
 import pandas as pd
 import re
+import os
 import pdfplumber
  # Make sure to install nltk and download the 'punkt' package
 import nltk
 from nltk.tokenize import sent_tokenize
+# # Set NLTK data path explicitly for deployment
+os.environ["NLTK_DATA"] = "nltk_data"
 # Ensure you have the punkt tokenizer downloaded
 nltk.download('punkt')
 
+
+# import ntlk.data
+# root = os.path.dirname(path.abspath(__file__))
+# download_dir = os.path.join(root, 'my_nltk_dir')
+# nltk.data.load(
+#     os.path.join(download_dir, 'tokenizers/punkt/english.pickle')
+# )
 
 class Text:
     def __init__(self, text: str, text_id: str):
