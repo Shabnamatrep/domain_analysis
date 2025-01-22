@@ -24,7 +24,7 @@ from torch.nn.functional import softmax
 load_dotenv()
 # Set the Hugging Face token. 
 hugging_face_token = os.getenv('HUGGING_FACE_TOKEN')
-print(hugging_face_token)
+#print(hugging_face_token)
 
 
 # Define the binary classifier model for domain classification
@@ -128,7 +128,7 @@ def process_excel(input_file_df, model_names):
 
             # Prepare to run the second model
             model_rv=DistilBertSequenceClassifier()
-            model_rv.load_state_dict(torch.load('distilbert_seq_classifier_rv.pth'))
+            model_rv.load_state_dict(torch.load('distilbert_seq_classifier_rv.pth', weights_only=True))
             # model_rv = DistilBertForSequenceClassification.from_pretrained('distilbert_seq_classifier_rv.pth')
             tokenizer_rv = DistilBertTokenizer.from_pretrained('tokenizer_rv',token=hugging_face_token)
 
@@ -157,6 +157,21 @@ def process_excel(input_file_df, model_names):
 
     # Return the original DataFrame if no filtering was applied
     return df
+
+# Function to process a CSV file with multiple models
+def get_new_filename(output_file):
+    if not os.path.exists(output_file):
+        return output_file
+    
+    base, ext = os.path.splitext(output_file)
+    counter = 1
+    new_output_file = f"{base}({counter}){ext}"
+    
+    while os.path.exists(new_output_file):
+        counter += 1
+        new_output_file = f"{base}({counter}){ext}"
+    
+    return new_output_file
 
 def process_excel2(input_file_df, model_names):
     # Load the Excel file
@@ -191,25 +206,6 @@ def process_excel2(input_file_df, model_names):
 
     # Return DataFrame instead of saving to a file
     return df
-
-
-
-# Function to process a CSV file with multiple models
-def get_new_filename(output_file):
-    if not os.path.exists(output_file):
-        return output_file
-    
-    base, ext = os.path.splitext(output_file)
-    counter = 1
-    new_output_file = f"{base}({counter}){ext}"
-    
-    while os.path.exists(new_output_file):
-        counter += 1
-        new_output_file = f"{base}({counter}){ext}"
-    
-    return new_output_file
-
-
 
 # Function to process an Excel file with multiple models
 def process_excel1(input_file, output_file, model_names):
