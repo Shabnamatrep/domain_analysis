@@ -108,7 +108,7 @@ def process_excel(input_file_df, model_names):
         # Construct the model file path
         model_path = os.path.join(base_dir, 'multilabel_domain_model', f'distilbert_binary_classifier_{model_name}.pth')
         model = DistilBertBinaryClassifier()
-        model.load_state_dict(torch.load(model_path, weights_only=True))
+        model.load_state_dict(torch.load(model_path))
         # model.load_state_dict(torch.load(rf'multilabel_domain_model\distilbert_binary_classifier_{model_name}.pth', weights_only=True))
         
         # Construct the tokenizer path
