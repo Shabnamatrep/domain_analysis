@@ -105,17 +105,27 @@ def process_excel(input_file_df, model_names):
 
     # Initialize lists to store predictions and probabilities for each model
     for model_name in model_names:
+
+        # try:
+        #     model.load_state_dict(torch.load('path_to_model.pth'))
+        # except Exception as e:
+        #     print(f"Error loading model: {e}")
+        #     raise
         # Construct the model file path
         model_path = os.path.join(base_dir, 'multilabel_domain_model', f'distilbert_binary_classifier_{model_name}.pth')
         model = DistilBertBinaryClassifier()
-        model.load_state_dict(torch.load(model_path))
-        # model.load_state_dict(torch.load(rf'multilabel_domain_model\distilbert_binary_classifier_{model_name}.pth', weights_only=True))
-        
-        # Construct the tokenizer path
-        tokenizer_path = os.path.join(base_dir, 'multilabel_domain_model', f'distilbert_binary_tokenizer_{model_name}')
-        
-        # Load the tokenizer
-        tokenizer = DistilBertTokenizer.from_pretrained(tokenizer_path, token=hugging_face_token)
+        try:
+            model.load_state_dict(torch.load(model_path))
+            # model.load_state_dict(torch.load(rf'multilabel_domain_model\distilbert_binary_classifier_{model_name}.pth', weights_only=True))
+            
+            # Construct the tokenizer path
+            tokenizer_path = os.path.join(base_dir, 'multilabel_domain_model', f'distilbert_binary_tokenizer_{model_name}')
+            
+            # Load the tokenizer
+            tokenizer = DistilBertTokenizer.from_pretrained(tokenizer_path, token=hugging_face_token)
+        except Exception as e:
+            print(f"Error loading model or tokenizer: {e}")
+            raise
         # tokenizer = DistilBertTokenizer.from_pretrained(
         #     rf'multilabel_domain_model\distilbert_binary_tokenizer_{model_name}/',
         #     token=hugging_face_token
@@ -144,11 +154,14 @@ def process_excel(input_file_df, model_names):
             # model_rv.load_state_dict(torch.load('distilbert_seq_classifier_rv.pth', weights_only=True))
             # # model_rv = DistilBertForSequenceClassification.from_pretrained('distilbert_seq_classifier_rv.pth')
             # tokenizer_rv = DistilBertTokenizer.from_pretrained('tokenizer_rv',token=hugging_face_token)
-
-            model_rv.load_state_dict(torch.load(os.path.join(base_dir, 'distilbert_seq_classifier_rv.pth')))
-            
-            # Load the tokenizer for the second model
-            tokenizer_rv = DistilBertTokenizer.from_pretrained(os.path.join(base_dir, 'tokenizer_rv'), token=hugging_face_token)
+            try:
+                model_rv.load_state_dict(torch.load(os.path.join(base_dir, 'distilbert_seq_classifier_rv.pth')))
+                
+                # Load the tokenizer for the second model
+                tokenizer_rv = DistilBertTokenizer.from_pretrained(os.path.join(base_dir, 'tokenizer_rv'), token=hugging_face_token)
+            except Exception as e:
+                print(f"Error loading model rv or tokenizer: {e}")
+                raise
 
             rv_predictions = []
             rv_probabilities = []
