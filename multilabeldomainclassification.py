@@ -99,15 +99,27 @@ def process_excel(input_file_df, model_names):
     # Check if the 'questions' column exists
     if 'questions' not in df.columns:
         raise ValueError("The input DataFrame must contain a 'questions' column.")
+    
+     # Define the base directory where models are stored (can be dynamically set)
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # Gets the directory of the current script
 
     # Initialize lists to store predictions and probabilities for each model
     for model_name in model_names:
+        # Construct the model file path
+        model_path = os.path.join(base_dir, 'multilabel_domain_model', f'distilbert_binary_classifier_{model_name}.pth')
         model = DistilBertBinaryClassifier()
-        model.load_state_dict(torch.load(rf'multilabel_domain_model\distilbert_binary_classifier_{model_name}.pth', weights_only=True))
-        tokenizer = DistilBertTokenizer.from_pretrained(
-            rf'multilabel_domain_model\distilbert_binary_tokenizer_{model_name}/',
-            token=hugging_face_token
-        )
+        model.load_state_dict(torch.load(model_path, weights_only=True))
+        # model.load_state_dict(torch.load(rf'multilabel_domain_model\distilbert_binary_classifier_{model_name}.pth', weights_only=True))
+        
+        # Construct the tokenizer path
+        tokenizer_path = os.path.join(base_dir, 'multilabel_domain_model', f'distilbert_binary_tokenizer_{model_name}')
+        
+        # Load the tokenizer
+        tokenizer = DistilBertTokenizer.from_pretrained(tokenizer_path, token=hugging_face_token)
+        # tokenizer = DistilBertTokenizer.from_pretrained(
+        #     rf'multilabel_domain_model\distilbert_binary_tokenizer_{model_name}/',
+        #     token=hugging_face_token
+        # )
         
         predictions = []
         probabilities = []
@@ -129,9 +141,14 @@ def process_excel(input_file_df, model_names):
 
             # Prepare to run the second model
             model_rv=DistilBertSequenceClassifier()
-            model_rv.load_state_dict(torch.load('distilbert_seq_classifier_rv.pth', weights_only=True))
-            # model_rv = DistilBertForSequenceClassification.from_pretrained('distilbert_seq_classifier_rv.pth')
-            tokenizer_rv = DistilBertTokenizer.from_pretrained('tokenizer_rv',token=hugging_face_token)
+            # model_rv.load_state_dict(torch.load('distilbert_seq_classifier_rv.pth', weights_only=True))
+            # # model_rv = DistilBertForSequenceClassification.from_pretrained('distilbert_seq_classifier_rv.pth')
+            # tokenizer_rv = DistilBertTokenizer.from_pretrained('tokenizer_rv',token=hugging_face_token)
+
+            model_rv.load_state_dict(torch.load(os.path.join(base_dir, 'distilbert_seq_classifier_rv.pth'), weights_only=True))
+            
+            # Load the tokenizer for the second model
+            tokenizer_rv = DistilBertTokenizer.from_pretrained(os.path.join(base_dir, 'tokenizer_rv'), token=hugging_face_token)
 
             rv_predictions = []
             rv_probabilities = []
@@ -174,97 +191,97 @@ def get_new_filename(output_file):
     
     return new_output_file
 
-def process_excel2(input_file_df, model_names):
-    # Load the Excel file
-    # df = pd.read_excel(input_file)
-    df = input_file_df
-    # Check if the 'questions' column exists
-    if 'questions' not in df.columns:
-        raise ValueError("The input Excel file must contain a 'questions' column.")
+# def process_excel2(input_file_df, model_names):
+#     # Load the Excel file
+#     # df = pd.read_excel(input_file)
+#     df = input_file_df
+#     # Check if the 'questions' column exists
+#     if 'questions' not in df.columns:
+#         raise ValueError("The input Excel file must contain a 'questions' column.")
 
-    # Initialize lists to store predictions and probabilities for each model
-    for model_name in model_names:
-        model = DistilBertBinaryClassifier()
-        model.load_state_dict(torch.load(rf'multilabel_domain_model\distilbert_binary_classifier_{model_name}.pth'))
-        tokenizer = DistilBertTokenizer.from_pretrained(
-            rf'multilabel_domain_model\distilbert_binary_tokenizer_{model_name}/',
-            token=hugging_face_token
-        )
+#     # Initialize lists to store predictions and probabilities for each model
+#     for model_name in model_names:
+#         model = DistilBertBinaryClassifier()
+#         model.load_state_dict(torch.load(rf'multilabel_domain_model\distilbert_binary_classifier_{model_name}.pth'))
+#         tokenizer = DistilBertTokenizer.from_pretrained(
+#             rf'multilabel_domain_model\distilbert_binary_tokenizer_{model_name}/',
+#             token=hugging_face_token
+#         )
         
-        predictions = []
-        probabilities = []
+#         predictions = []
+#         probabilities = []
 
-        # Loop through each question
-        for question in df['questions']:
-            predicted_label, probability = infer(question, model, tokenizer)
-            predictions.append(model_name if predicted_label == 1 else 0)
-            probabilities.append(round(probability, 4))
+#         # Loop through each question
+#         for question in df['questions']:
+#             predicted_label, probability = infer(question, model, tokenizer)
+#             predictions.append(model_name if predicted_label == 1 else 0)
+#             probabilities.append(round(probability, 4))
 
-        # Add predictions and probabilities to DataFrame
-        df[f'predicted_label_{model_name}'] = predictions
-        df[f'probability_{model_name}'] = probabilities
+#         # Add predictions and probabilities to DataFrame
+#         df[f'predicted_label_{model_name}'] = predictions
+#         df[f'probability_{model_name}'] = probabilities
 
 
-    # Return DataFrame instead of saving to a file
-    return df
+#     # Return DataFrame instead of saving to a file
+#     return df
 
-# Function to process an Excel file with multiple models
-def process_excel1(input_file, output_file, model_names):
-    # Load the Excel file
-    df = pd.read_excel(input_file)
+# # Function to process an Excel file with multiple models
+# def process_excel1(input_file, output_file, model_names):
+#     # Load the Excel file
+#     df = pd.read_excel(input_file)
 
-    # Check if the 'sentence' column exists
-    if 'questions' not in df.columns:
-        raise ValueError("The input Excel file must contain a 'questions' column.")
+#     # Check if the 'sentence' column exists
+#     if 'questions' not in df.columns:
+#         raise ValueError("The input Excel file must contain a 'questions' column.")
 
-    # Initialize lists to store predictions and probabilities for each model
-    for model_name in model_names:
-        model = DistilBertBinaryClassifier()
-        #if running for the first time
-        model.load_state_dict(torch.load(rf'multilabel_domain_model\distilbert_binary_classifier_{model_name}.pth'))  # Load the model weights
+#     # Initialize lists to store predictions and probabilities for each model
+#     for model_name in model_names:
+#         model = DistilBertBinaryClassifier()
+#         #if running for the first time
+#         model.load_state_dict(torch.load(rf'multilabel_domain_model\distilbert_binary_classifier_{model_name}.pth'))  # Load the model weights
 
-        #model.load_state_dict(torch.load('domain_models\distilbertbinary_r\distilbert_binary_classifier_r.pth'))
-        # Load the tokenizer and provide the Hugging Face token
-        tokenizer = DistilBertTokenizer.from_pretrained(rf'multilabel_domain_model\distilbert_binary_tokenizer_{model_name}/',token=hugging_face_token)
+#         #model.load_state_dict(torch.load('domain_models\distilbertbinary_r\distilbert_binary_classifier_r.pth'))
+#         # Load the tokenizer and provide the Hugging Face token
+#         tokenizer = DistilBertTokenizer.from_pretrained(rf'multilabel_domain_model\distilbert_binary_tokenizer_{model_name}/',token=hugging_face_token)
 
         
-        # Initialize lists for storing results
-        predictions = []
-        probabilities = []
+#         # Initialize lists for storing results
+#         predictions = []
+#         probabilities = []
 
-        # Loop through each sentence in the column
-        for questions in df['questions']:
-            predicted_label, probability = infer(questions, model, tokenizer)
-            predictions.append(predicted_label)
-            probabilities.append(round(probability,4)) #round the probability to 4 decimal places
+#         # Loop through each sentence in the column
+#         for questions in df['questions']:
+#             predicted_label, probability = infer(questions, model, tokenizer)
+#             predictions.append(predicted_label)
+#             probabilities.append(round(probability,4)) #round the probability to 4 decimal places
 
-        # Add predictions and probabilities to the DataFrame
-        #df[f'predicted_label_{model_name}'] = predictions
-        df[f'predicted_label_{model_name}'] = [model_name if label == 1 else label for label in predictions]
-        df[f'probability_{model_name}'] = probabilities
+#         # Add predictions and probabilities to the DataFrame
+#         #df[f'predicted_label_{model_name}'] = predictions
+#         df[f'predicted_label_{model_name}'] = [model_name if label == 1 else label for label in predictions]
+#         df[f'probability_{model_name}'] = probabilities
 
-        # Filter out rows where the predicted label is 0 (no prediction)
-        #df = df[df[f'predicted_label_{model_name}'] != 0]
+#         # Filter out rows where the predicted label is 0 (no prediction)
+#         #df = df[df[f'predicted_label_{model_name}'] != 0]
 
-    # Save the updated DataFrame to a new Excel file
-    # df.to_excel(output_file, index=False)
-    # Save the updated DataFrame to a new Excel file with alignment
-    with pd.ExcelWriter(output_file, engine='xlsxwriter') as writer:
-        df.to_excel(writer, index=False)
+#     # Save the updated DataFrame to a new Excel file
+#     # df.to_excel(output_file, index=False)
+#     # Save the updated DataFrame to a new Excel file with alignment
+#     with pd.ExcelWriter(output_file, engine='xlsxwriter') as writer:
+#         df.to_excel(writer, index=False)
 
-        # Access the workbook and worksheet
-        workbook = writer.book
-        worksheet = writer.sheets['Sheet1']  # Adjust 'Sheet1' if the sheet name is different
+#         # Access the workbook and worksheet
+#         workbook = writer.book
+#         worksheet = writer.sheets['Sheet1']  # Adjust 'Sheet1' if the sheet name is different
 
-        # Create a format for center alignment
-        center_align_format = workbook.add_format({'align': 'center'})
+#         # Create a format for center alignment
+#         center_align_format = workbook.add_format({'align': 'center'})
 
-        # Apply the center alignment format to specific columns (for predictions and probabilities)
-        for col_num, col_name in enumerate(df.columns):
-            if 'predicted_label_' in col_name or 'probability_' in col_name or 'domain' in col_name:
-                worksheet.set_column(col_num, col_num, None, center_align_format)
-        print(f"Predictions saved to {output_file}")
-        return output_file
+#         # Apply the center alignment format to specific columns (for predictions and probabilities)
+#         for col_num, col_name in enumerate(df.columns):
+#             if 'predicted_label_' in col_name or 'probability_' in col_name or 'domain' in col_name:
+#                 worksheet.set_column(col_num, col_num, None, center_align_format)
+#         print(f"Predictions saved to {output_file}")
+#         return output_file
 
 
 # Example call to process the PDF
