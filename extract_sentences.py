@@ -18,9 +18,13 @@ from nltk.tokenize import sent_tokenize
 # # nltk.download('punkt')
 # nltk.download('punkt', download_dir=download_dir)
 # Set the NLTK data path to use the pre-downloaded folder
-os.environ["NLTK_DATA"] = "nltk_data"
+# os.environ["NLTK_DATA"] = "nltk_data"
 
 # Verify that 'punkt' is available (this won't download it again)
+
+# Specify the path where your NLTK data is located
+nltk_data_path = "nltk_data"  # Update this path
+nltk.data.path.append(nltk_data_path)
 nltk.data.find('tokenizers/punkt')
 
 # import ntlk.data
