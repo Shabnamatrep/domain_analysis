@@ -145,7 +145,7 @@ def process_excel(input_file_df, model_names):
             # # model_rv = DistilBertForSequenceClassification.from_pretrained('distilbert_seq_classifier_rv.pth')
             # tokenizer_rv = DistilBertTokenizer.from_pretrained('tokenizer_rv',token=hugging_face_token)
 
-            model_rv.load_state_dict(torch.load(os.path.join(base_dir, 'distilbert_seq_classifier_rv.pth'), weights_only=True))
+            model_rv.load_state_dict(torch.load(os.path.join(base_dir, 'distilbert_seq_classifier_rv.pth')))
             
             # Load the tokenizer for the second model
             tokenizer_rv = DistilBertTokenizer.from_pretrained(os.path.join(base_dir, 'tokenizer_rv'), token=hugging_face_token)
