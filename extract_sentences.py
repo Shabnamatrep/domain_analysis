@@ -10,13 +10,18 @@ import pdfplumber
  # Make sure to install nltk and download the 'punkt' package
 import nltk
 from nltk.tokenize import sent_tokenize
-# # Set NLTK data path explicitly for deployment
-os.environ["NLTK_DATA"] = "nltk_data"
-# Ensure you have the punkt tokenizer downloaded
-download_dir = os.path.abspath('nltk_data')
-# nltk.download('punkt')
-nltk.download('punkt', download_dir=download_dir)
 
+# # # Set NLTK data path explicitly for deployment
+# os.environ["NLTK_DATA"] = "nltk_data"
+# # Ensure you have the punkt tokenizer downloaded
+# download_dir = os.path.abspath('nltk_data')
+# # nltk.download('punkt')
+# nltk.download('punkt', download_dir=download_dir)
+# Set the NLTK data path to use the pre-downloaded folder
+os.environ["NLTK_DATA"] = "nltk_data"
+
+# Verify that 'punkt' is available (this won't download it again)
+nltk.data.find('tokenizers/punkt')
 
 # import ntlk.data
 # root = os.path.dirname(path.abspath(__file__))
